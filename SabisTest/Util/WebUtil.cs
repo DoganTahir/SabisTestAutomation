@@ -1,6 +1,9 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -27,16 +30,46 @@ namespace SabisTest.Util
                 _webDriverFactory = new WebUtil();
                 try
                 {
-                    webDriverFactory.
+                    _webDriverFactory.CreateBrowser();
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.ToString());
                 }
             }
-        }
+            return _webDriverFactory;
 
-        Pub
+        }
 
         public IWebDriver CreateBrowser()
         {
-            switch (Configuration.)}
-            
+            switch (configuration.Type)
+            {
+                case "chrome":
+                    InitializeChromeDriver();
+                    break;
+            }
+            browser = new Browser();
+            return browser;
+        }
+        public static Browser GetBrowser(Configuration config)
+        {
+            configuration = config;
+            return GetInitial().browser;
+        }
+
+        public void InitializeChromeDriver()
+        {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.AddArgument("disable-extension");
+            chromeOptions.AddArgument("--start-maximized");
+            WebDriver = new ChromeDriver();
+            WebDriver.Url = configuration.BaseUrl;
+        }
+
+        public IWebDriver GetWebDriver()
+        {
+            return WebDriver;
+        }           
     }
 }
