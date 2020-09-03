@@ -4,20 +4,16 @@ using OpenQA.Selenium.Support.PageObjects;
 using SabisTest.Page;
 using SabisTest.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace SabisTest.Test
 {
     [TestClass()]
-    public class SabisLoginTest : AutomationBaseTest
+    public class SabisAccountSettingsTest : AutomationBaseTest
     {
         private static TestContext testContext;
         private string message;
         private string stackMessage;
-        [CacheLookup] private const string ERROR_LABEL_XPATH = "/html/body/div[1]/div[1]/strong";
+        [CacheLookup] private const string SECONDARY_EMAIL_INPUT_ID = "ikincilEPosta";
+        SabisLoginPage sabisLoginPage = SabisLoginPage.Load(browser);
 
 
         [ClassInitialize()]
@@ -37,39 +33,26 @@ namespace SabisTest.Test
             browser.RefreshPage();
         }
 
+        // Sabiste Kayıtlı Mail Adresi Kontrolü
         [TestMethod]
         public void TestScenario1()
         {
+            
+
             try
             {
                 browser.Url = "https://sabis.sakarya.edu.tr/tr/Login";
-                SabisLoginPage sabisLoginPage = SabisLoginPage.Load(browser);
+                SabisMainPage sabisMainPage = SabisMainPage.Load(browser);
                 sabisLoginPage.SendUsername(configuration.UserName);
                 sabisLoginPage.SendPassword(configuration.Password);
                 sabisLoginPage.ClickLoginButton();
-                Assert.IsTrue(sabisLoginPage.IsLoginSuccessed("TAHİRDOĞAN"), "Giriş Yapılamadı");
-
-            }
-            catch (Exception e)
-            {
-                message = e.Message;
-                stackMessage = e.StackTrace;
-                throw;
-            }
-        }
-
-        [TestMethod]
-        public void TestScenario2()
-        {
-
-            try
-            {
-                browser.Url = "https://sabis.sakarya.edu.tr/tr/Login";
-                SabisLoginPage sabisLoginPage = SabisLoginPage.Load(browser);
-                sabisLoginPage.SendUsername("Test");
+                sabisMainPage.ClickAccountMenu();
                 sabisLoginPage.SendPassword(configuration.Password);
                 sabisLoginPage.ClickLoginButton();
-                Assert.AreEqual(browser.FindElement(By.XPath(ERROR_LABEL_XPATH)).Text, "Hata!");
+                SabisAccountSettingsPage sabisAccountSettingsPage = SabisAccountSettingsPage.Load(browser);
+                sabisAccountSettingsPage.SecondaryEmailLabelClick();
+                var email = browser.FindElement(By.Id(SECONDARY_EMAIL_INPUT_ID)).GetAttribute("value");
+                Assert.AreEqual(email, "by_tahir@windowslive.com");
             }
             catch (Exception e)
             {

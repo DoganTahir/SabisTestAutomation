@@ -11,15 +11,16 @@ using System.Threading.Tasks;
 
 namespace SabisTest.Test
 {
-    [TestClass()]
-    public class SabisLoginTest : AutomationBaseTest
+    [TestClass]
+    public class SabisFoodMenuTest : AutomationBaseTest
     {
         private static TestContext testContext;
         private string message;
         private string stackMessage;
-        [CacheLookup] private const string ERROR_LABEL_XPATH = "/html/body/div[1]/div[1]/strong";
-
-
+        SabisLoginPage sabisLoginPage = SabisLoginPage.Load(browser);
+        SabisMainPage sabisMainPage = SabisMainPage.Load(browser);
+        [CacheLookup] private const string DIET_LABEL_XPATH = "/html/body/header/div/div[2]/div/div/div[3]/div/div/ul/li/small/i";
+        [CacheLookup] private const string DINING_HALL_LABEL_XPATH = "/html/body/div[1]/div/div/h1";
         [ClassInitialize()]
         public static void ClassInit(TestContext context)
         {
@@ -37,18 +38,21 @@ namespace SabisTest.Test
             browser.RefreshPage();
         }
 
+        //Diyet Menüsünün  Görüntülenmesi
         [TestMethod]
         public void TestScenario1()
         {
+
             try
             {
                 browser.Url = "https://sabis.sakarya.edu.tr/tr/Login";
-                SabisLoginPage sabisLoginPage = SabisLoginPage.Load(browser);
                 sabisLoginPage.SendUsername(configuration.UserName);
                 sabisLoginPage.SendPassword(configuration.Password);
                 sabisLoginPage.ClickLoginButton();
-                Assert.IsTrue(sabisLoginPage.IsLoginSuccessed("TAHİRDOĞAN"), "Giriş Yapılamadı");
-
+                sabisMainPage.ClickFoodMenu();
+                SabisFoodMenuPage sabisFoodMenuPage = SabisFoodMenuPage.Load(browser);
+                sabisFoodMenuPage.DietButtonClick();
+                Assert.AreEqual(browser.FindElement(By.XPath(DIET_LABEL_XPATH)).Text, "Diyet Menüdesiniz");
             }
             catch (Exception e)
             {
@@ -58,6 +62,7 @@ namespace SabisTest.Test
             }
         }
 
+        //Yemekhaneler Sayfasının Yüklenmesi
         [TestMethod]
         public void TestScenario2()
         {
@@ -65,11 +70,13 @@ namespace SabisTest.Test
             try
             {
                 browser.Url = "https://sabis.sakarya.edu.tr/tr/Login";
-                SabisLoginPage sabisLoginPage = SabisLoginPage.Load(browser);
-                sabisLoginPage.SendUsername("Test");
+                sabisLoginPage.SendUsername(configuration.UserName);
                 sabisLoginPage.SendPassword(configuration.Password);
                 sabisLoginPage.ClickLoginButton();
-                Assert.AreEqual(browser.FindElement(By.XPath(ERROR_LABEL_XPATH)).Text, "Hata!");
+                sabisMainPage.ClickFoodMenu();
+                SabisFoodMenuPage sabisFoodMenuPage = SabisFoodMenuPage.Load(browser);
+                sabisFoodMenuPage.DiningHallLabelClick();
+                Assert.AreEqual(browser.FindElement(By.XPath(DINING_HALL_LABEL_XPATH)).Text, "YEMEKHANELER");
             }
             catch (Exception e)
             {
@@ -86,6 +93,5 @@ namespace SabisTest.Test
             browser = new Browser();
             configuration = new Configuration();
         }
-
     }
 }

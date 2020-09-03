@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Page\AutomationBasePage.cs" />
+    <Compile Include="Page\SabisAccountSettingsPage.cs" />
+    <Compile Include="Page\SabisFoodMenuPage.cs" />
     <Compile Include="Page\SabisLoginPage.cs" />
     <Compile Include="Page\SabisMainPage.cs" />
     <Compile Include="Properties\Settings1.Designer.cs">
@@ -69,9 +71,10 @@
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
     <Compile Include="Test\AutomationBaseTest.cs" />
+    <Compile Include="Test\SabisAccountSettingsTest.cs" />
+    <Compile Include="Test\SabisFoodMenuTest.cs" />
     <Compile Include="Test\SabisLoginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test\SabisMainTest.cs" />
     <Compile Include="Util\Browser.cs" />
     <Compile Include="Util\BrowserType.cs" />
     <Compile Include="Util\Configuration.cs" />

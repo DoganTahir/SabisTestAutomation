@@ -63,7 +63,7 @@ namespace SabisTest.Util
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.AddArgument("disable-extension");
             chromeOptions.AddArgument("--start-maximized");
-            WebDriver = new ChromeDriver();
+            WebDriver = new ChromeDriver(chromeOptions);
             WebDriver.Url = configuration.BaseUrl;
         }
 
